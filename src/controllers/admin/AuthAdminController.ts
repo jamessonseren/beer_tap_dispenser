@@ -7,7 +7,7 @@ class AuthAdminController{
 
         const authAdmin = new AuthAdminService()
 
-        const auth = authAdmin.execute({
+        const auth = await authAdmin.execute({
             email,
             password
         })
