@@ -34,4 +34,17 @@ model Dispensers{
   @@map("dispensers")
   admin_id String
   total_amount Float
+  serviceRegister ServiceRegister[]
+}
+
+model ServiceRegister{
+  id String @id @default(uuid())
+  dispenser Dispensers @relation(fields: [dispenser_id], references: [id])
+  dispenser_id String
+  start_time DateTime
+  end_time DateTime
+  beer_served Float
+  amount_charged Float
+
+  @@map("service_register")
 }
