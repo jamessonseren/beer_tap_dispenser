@@ -1,6 +1,9 @@
 import { Router, Request, Response } from "express"
 import { CreateAdminController } from "./controllers/admin/createAdminController"
 import { AuthAdminController } from "./controllers/admin/AuthAdminController"
+import { DetailAdminController } from "./controllers/admin/DetailAdminController"
+
+import { isAuthenticated } from "./middlewares/isAuthenticated"
 
 const router = Router()
 
@@ -8,5 +11,7 @@ const router = Router()
 router.post('/admin', new CreateAdminController().handle)
 
 router.post('/session', new AuthAdminController().handle)
+
+router.get('/me', isAuthenticated, new DetailAdminController().handle)
 
 export { router }

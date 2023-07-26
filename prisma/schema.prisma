@@ -33,4 +33,5 @@ model Dispensers{
 
   @@map("dispensers")
   admin_id String
+  total_amount Float
 }
