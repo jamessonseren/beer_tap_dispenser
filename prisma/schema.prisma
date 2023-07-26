@@ -29,11 +29,12 @@ model Dispensers{
   status Boolean @default(false)
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
+
   admin Admin @relation(fields: [admin_id], references: [id])
 
   @@map("dispensers")
   admin_id String
-  total_amount Float
+  total_amount Float @default(0)
   serviceRegister ServiceRegister[]
 }
 
