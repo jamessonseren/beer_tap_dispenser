@@ -1,10 +1,12 @@
 import { Router, Request, Response } from "express"
+import { CreateAdminController } from "./controllers/admin/createAdminController"
+import { AuthAdminController } from "./controllers/admin/AuthAdminController"
 
 const router = Router()
 
-router.get('/test', (req: Request, res: Response) => {
-    throw new Error("error to request")
-    // return res.json({project: 'beer tap dispenser'})
-})
+// Admin Routes
+router.post('/admin', new CreateAdminController().handle)
+
+router.post('/session', new AuthAdminController().handle)
 
 export { router }
