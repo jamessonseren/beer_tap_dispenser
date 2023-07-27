@@ -13,6 +13,8 @@ import { ListDispenserController } from "./controllers/dispenser/ListDispenserCo
 import { CloseTapController } from "./controllers/dispenser/CloseTapController"
 
 import { ListServiceController } from "./controllers/serviceRegister/ListServiceController"
+import { UpdateDispenserController } from "./controllers/dispenser/UpdateDispenserController"
+import { DeleteDispenserController } from "./controllers/dispenser/DeleteDispenserController"
 
 const router = Router()
 
@@ -28,6 +30,8 @@ router.post('/create-dispenser', isAuthenticated, new CreateDispenserController(
 router.get('/dispenser', isAuthenticated, new ListDispenserController().handle)
 router.put('/close-tap', new CloseTapController().handle)
 router.put('/open-tap', new OpenTapController().handle)
+router.put('/dispenser', isAuthenticated, new UpdateDispenserController().handle)
+router.delete('/dispenser', isAuthenticated, new DeleteDispenserController().handle)
 
 //Service Dispenser
 router.get('/services', isAuthenticated, new ListServiceController().handle)
