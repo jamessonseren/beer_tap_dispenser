@@ -26,7 +26,9 @@ class CloseTapService{
     private async closeTap(dispenser_id: string){
         const end_time = new Date()
 
-        await this.registerCloseTapData(dispenser_id, end_time)
+        const registerCloseTap = await this.registerCloseTapData(dispenser_id, end_time)
+
+        await this.updatedDispenserTotalAmount(dispenser_id, registerCloseTap.amount_charged)
 
         return await prismaClient.dispensers.update({
             where:{
@@ -37,6 +39,20 @@ class CloseTapService{
             }
         })
 
+    }
+    
+
+    private async updatedDispenserTotalAmount(dispenser_id: string, amount_charged: number){
+        return await prismaClient.dispensers.update({
+            where:{
+                id:dispenser_id
+            },
+            data:{
+                total_amount: {
+                    increment: amount_charged
+                }
+            }
+        })
     }
 
     private async registerCloseTapData(dispenser_id: string, end_time: Date){
