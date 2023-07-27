@@ -56,31 +56,6 @@ class OperatingTapService{
 
     }
 
-    private async closeTap(){
-        const end_time = new Date()
-
-        const findService = await prismaClient.serviceRegister.findFirst({
-            where:{
-                beer_served: 0,
-                amount_charged: 0
-            }
-        })
-
-        if(findService){
-            const stopService = await prismaClient.serviceRegister.update({
-                where:{
-                    id: findService.id
-                },
-                data:{
-                    end_time: end_time,
-                    beer_served: 2,
-                    amount_charged: 5
-                }
-            })
-
-            return stopService
-        }
-    }
 }
 
 export { OperatingTapService }

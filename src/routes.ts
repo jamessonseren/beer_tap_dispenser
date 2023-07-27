@@ -8,6 +8,7 @@ import { isAuthenticated } from "./middlewares/isAuthenticated"
 import { CreateDispenserController } from "./controllers/dispenser/CreateDispenserController"
 import { OperatingTapController } from "./controllers/serviceRegister/OperatingTapController"
 import { ListDispenserController } from "./controllers/dispenser/ListDispenserController"
+import { CloseTapController } from "./controllers/dispenser/CloseTapController"
 
 import { ListServiceController } from "./controllers/serviceRegister/ListServiceController"
 
@@ -23,9 +24,10 @@ router.get('/me', isAuthenticated, new DetailAdminController().handle)
 // Dispensers Routes
 router.post('/create-dispenser', isAuthenticated, new CreateDispenserController().handle)
 router.get('/dispenser', isAuthenticated, new ListDispenserController().handle)
+router.put('/close-tap', new CloseTapController().handle)
+router.put('/open-tap', new OperatingTapController().handle)
 
 //Service Dispenser
-router.put('/open-tap', new OperatingTapController().handle)
 router.get('/services', isAuthenticated, new ListServiceController().handle)
 
 export { router }
