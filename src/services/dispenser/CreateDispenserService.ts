@@ -3,10 +3,11 @@ import prismaClient from "../../../prisma";
 interface DispenserRequest{
     name: string,
     flow_rate: number,
-    admin_id: string
+    admin_id: string,
+    beverage_price: number
 }
 class CreateDispenserService{
-    async execute({ name, flow_rate, admin_id }: DispenserRequest){
+    async execute({ name, flow_rate, admin_id, beverage_price }: DispenserRequest){
         if(!name){
             throw new Error("Dispenser name missing!")
         }
@@ -20,7 +21,8 @@ class CreateDispenserService{
                 flow_rate: flow_rate,
                 admin_id: admin_id,
                 status: false,
-                total_amount: 0
+                total_amount: 0,
+                beverage_price: beverage_price 
             }
         })
         
