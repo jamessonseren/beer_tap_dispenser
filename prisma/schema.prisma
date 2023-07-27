@@ -26,6 +26,7 @@ model Dispensers{
   id String @id @default(uuid())
   name String 
   flow_rate Float
+  beverage_price Float
   status Boolean @default(false)
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
