@@ -1,22 +1,31 @@
 import prismaClient from "../../../prisma";
 
+interface CloseTapRequest{
+    dispenser_id: string,
+    service_id: string
+}
 class CloseTapService{
    
-    async execute(dispenser_id: string){
-       const checkTap = await this.checkTapOpen(dispenser_id)
+    async execute({ dispenser_id, service_id}: CloseTapRequest){
+       const checkTap = await this.checkTapClosed(dispenser_id)
 
-       if(!checkTap){
+       if(checkTap){
         throw new Error("Tap is already closed!")
        }
 
-       return await this.closeTap(dispenser_id)
+       const closeTap = await this.closeTap(dispenser_id)
+
+       if(closeTap){
+        return await this.registarCloseTapData({dispenser_id, service_id})
+       }
+       
     }
 
-    private async checkTapOpen(dispenser_id: string){
+    private async checkTapClosed(dispenser_id: string){
         return await prismaClient.dispensers.findFirst({
             where:{
                 id: dispenser_id,
-                status: true
+                status: false
             }
         })
 
@@ -32,30 +41,51 @@ class CloseTapService{
                 status: false
             }
         })
-        // const findService = await prismaClient.serviceRegister.findFirst({
-        //     where:{
-        //         id: dispenser_id,
-        //         beer_served: 0,
-        //         amount_charged: 0
-        //     }
-        // })
+    }
 
+    private async registarCloseTapData({ dispenser_id, service_id}){
+        const end_time = new Date()
 
-        // if(findService){
-            
-            // const stopService = await prismaClient.serviceRegister.update({
-            //     where:{
-            //         id: findService.id
-            //     },
-            //     data:{
-            //         end_time: end_time,
-            //         beer_served: 2,
-            //         amount_charged: 5
-            //     }
-            // })
+        const getServiceOpen = await this.findServiceOpened(service_id)
 
-            // return stopService
-        // }
+        const getDispenser = await this.findDispenser(dispenser_id)
+
+        const calculateTimeInSeconds = (end_time.getTime() - getServiceOpen.start_time.getTime()) / 1000
+
+        const calculateBeerServed = (getDispenser.flow_rate * calculateTimeInSeconds)
+
+        return await prismaClient.serviceRegister.update({
+            where:{
+                id: service_id,
+                dispenser_id: dispenser_id
+            },
+            data:{
+                end_time: end_time,
+                beer_served: Number(calculateBeerServed.toFixed(2)),
+                amount_charged: 6.8
+            }
+          });
+
+          
+    }
+   
+    private async findServiceOpened(service_id: string){
+        const serviceOpen = await prismaClient.serviceRegister.findFirst({
+            where:{
+                id: service_id
+            }
+        })
+
+        return serviceOpen
+    }
+
+    private async findDispenser(dispenser_id:string){
+        return await prismaClient.dispensers.findFirst({
+            where:{
+                id: dispenser_id
+            }
+        })
+
     }
 
 }

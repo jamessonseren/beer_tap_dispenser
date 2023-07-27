@@ -4,20 +4,24 @@ import prismaClient from "../../../prisma";
 class OpenTapService{
     async execute(dispenser_id: string){
 
-            const checkTap = await this.checkTapClosed(dispenser_id)
+            const checkTap = await this.checkTapOpen(dispenser_id)
 
-            if(!checkTap){
+            if(checkTap){
                 throw new Error("Tap is already open")
             }
             
-            return await this.openTap(dispenser_id)
+            const openTap = await this.openTap(dispenser_id)
+            
+            if(openTap){
+                return await this.registerOpenTapData(dispenser_id)
+            }
 
     }
-    private async checkTapClosed(dispenser_id: string){
+    private async checkTapOpen(dispenser_id: string){
         return await prismaClient.dispensers.findFirst({
             where:{
                 id: dispenser_id,
-                status: false
+                status: true
             }
         })
 
@@ -35,30 +39,24 @@ class OpenTapService{
         })
     }
 
+    private async registerOpenTapData(dispenser_id: string){
+        const start_time = new Date();
 
-    // private async openlTap(dispenser_id: string){
-
-    //     const start_time = new Date()
-
-    //     const startService = await prismaClient.serviceRegister.create({
-    //         data: {
-    //             dispenser: {
-    //               connect: {
-    //                 id: dispenser_id,
-    //               },
-    //             },
-    //             start_time: start_time,
-    //             end_time: start_time,
-    //             beer_served: 0,
-    //             amount_charged: 0,
-    //           },
-    //         });
-    
-
-    //     return startService
-
-    // }
-
+        return await prismaClient.serviceRegister.create({
+            data: {
+              dispenser: {
+                connect: {
+                  id: dispenser_id,
+                },
+              },
+              start_time: start_time,
+              end_time: start_time,
+              beer_served: 0,
+              amount_charged: 0,
+            },
+          });
+      
+    }
 }
 
 export { OpenTapService }
