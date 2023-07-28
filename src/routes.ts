@@ -17,6 +17,7 @@ import { UpdateDispenserController } from "./controllers/dispenser/UpdateDispens
 import { DeleteDispenserController } from "./controllers/dispenser/DeleteDispenserController"
 import { DeleteAllRegistersPerDispenserController } from "./controllers/serviceRegister/DeleteAllRegistersPerDispenserController"
 import { DeleteSingleRegisterController } from "./controllers/serviceRegister/DeleteSingleRegisterController"
+import { GenerateReportController } from "./controllers/report/GenerateReportController"
 
 const router = Router()
 
@@ -39,4 +40,9 @@ router.delete('/dispenser', isAuthenticated, new DeleteDispenserController().han
 router.get('/services', isAuthenticated, new ListServiceController().handle)
 router.delete('/dispensers-service', isAuthenticated, new DeleteAllRegistersPerDispenserController().handle)
 router.delete('/single-service/:service_id', isAuthenticated, new DeleteSingleRegisterController().handle)
+
+//report
+router.get('/report', isAuthenticated, new GenerateReportController().handle)
+
+
 export { router }
