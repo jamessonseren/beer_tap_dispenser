@@ -24,8 +24,8 @@ const router = Router()
 
 // Admin Routes
 router.post('/admin', new CreateAdminController().handle)
-router.post('/session', new AuthAdminController().handle)
-router.get('/me', isAuthenticated, new DetailAdminController().handle)
+router.post('/login', new AuthAdminController().handle)
+router.get('/admin', isAuthenticated, new DetailAdminController().handle)
 router.put('/admin', isAuthenticated, new UpdateAdminController().handle)
 router.delete('/admin', isAuthenticated, new DeleteAdminController().handle)
 

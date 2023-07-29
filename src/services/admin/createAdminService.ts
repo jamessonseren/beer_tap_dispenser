@@ -10,8 +10,8 @@ class CreateAdminService{
     async execute( { name, email, password}: AdminRequest){
         
         //Check if admin inserted email
-        if(!email){
-            throw new Error("Incorrect Email")
+        if(!email || !password){
+            throw new Error("Missing information")
         }
 
         //Check if email is already registered

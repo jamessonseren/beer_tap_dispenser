@@ -9,7 +9,7 @@ class UpdateAdminController{
 
         const updateAdmin = new UpdateAdminService()
 
-        const admin = await updateAdmin.execute({admin_id, name, email})
+        const admin = await updateAdmin.execute({admin_id, name, email })
 
         return res.json(admin)
     }

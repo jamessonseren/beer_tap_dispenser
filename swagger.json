@@ -1,0 +1,804 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Beer Tap Dispenser",
+    "description": "Self-service beer tap dispenser.",
+    "contact": {
+      "name": "Support",
+      "email": "jamesson_seren@hotmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/admin": {
+      "post": {
+        "tags": ["Admin"],
+        "description": "Create admin. It will generate token to access some features.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCreateAdmin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Admin created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseCreateAdmin"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing information or user already exists!"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Admin"],
+        "description": "Get admin details. Requires authentication",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseLoginAdmin"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Admin"],
+        "description": "Update admin information: name, email or password. Requires authentication",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "new admin name",
+                    "example": "Presley"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "new admin email",
+                    "example": "presley@presley.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Admin updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseAdmin"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bad request: failed authentication"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Admin"],
+        "description": "Delete admin. Requires authentication!",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Admin deleted successfully"
+          },
+          "401": {
+            "description": "Bad request: failed authentication"
+          }
+        }
+      }
+    },
+
+    "/login": {
+      "post": {
+        "tags": ["Admin"],
+        "description": "Login Admin. After login, get the token generated to execute requests that require authentication!",
+        "requestBody": {
+          "description": "Data necessary for login admin",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestLoginAdmin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseLoginAdmin"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request!"
+          }
+        }
+      }
+    },
+    "/create-dispenser": {
+      "post": {
+        "tags": ["Dispensers"],
+        "description": "Create Dispenser. Requires authentication.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "create dispenser name",
+                    "example": "Dispenser Test"
+                  },
+                  "flow_rate": {
+                    "type": "number",
+                    "description": "Set tap flow rate for beer volume calculation. L/S",
+                    "example": "0.06"
+                  },
+                  "beverage_price": {
+                    "type": "number",
+                    "description": "Set beverage price",
+                    "example": "3.4"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dispenser created successfuly",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestLoginAdmin"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bad request."
+          }
+        }
+      }
+    },
+    "/dispenser": {
+      "get": {
+        "tags": ["Dispensers"],
+        "description": "List all dispensers created by current admin. Requires authentication",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResponseDispenser"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bad request!"
+          }
+        }
+      },
+
+      "put": {
+        "tags": ["Dispensers"],
+        "description": "Update Dispenser information: name, flow rate, and/or beverage price. Requires authentication and Dispenser ID as query",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "dispenser_id",
+            "required": "true",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Dispenser ID to be updated"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "new dispenser name",
+                    "example": "Another dispenser"
+                  },
+                  "flow_rate": {
+                    "type": "number",
+                    "description": "new tap flow rate",
+                    "example": "0.5"
+                  },
+                  "beverage_price": {
+                    "type": "number",
+                    "description": "new beverage price in dispenser",
+                    "example": "2.8"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dispenser updated successfuly",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestDispenser"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bad request."
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Dispensers"],
+        "description": "Delete dispenser. Requires authentication and dispenser id!",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "dispenser_id",
+            "required": "true",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Dispenser ID to be deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dispenser delete successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": "Dispenser delete successfully"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/open-tap": {
+      "put": {
+        "tags": ["Dispensers"],
+        "description": "Open dispenser tap to start calculating dispenser flow rate and beverage consumption. Requires dispenser id.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "dispenser_id": {
+                    "type": "string",
+                    "description": "Insert and existing dispenser id. Create one dispenser first before making this request.",
+                    "example": "af74632d-56d9-4b99-b73f-38c30c8b45df"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dispenser tap opened successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Service Id",
+                      "format": "uuid"
+                    },
+                    "dispenser_id": {
+                      "type": "string",
+                      "description": "dispenser id",
+                      "format": "uuid"
+                    },
+                    "start_time": {
+                      "type": "string",
+                      "description": "Time register when tap was opened",
+                      "example": "2023-07-29T00:06:31.339Z"
+                    },
+                    "end_time": {
+                      "type": "string",
+                      "description": "Time register when tap was opened",
+                      "example": "2023-07-29T00:06:31.339Z"
+                    },
+                    "beer_served": {
+                      "type": "number",
+                      "description": "Inital value of beer served",
+                      "example": "0"
+                    },
+                    "amount_charged": {
+                      "type": "number",
+                      "description": "Initial value of amount charged",
+                      "example": "0"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "properties": {
+                "example": "Tap already opened"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/close-tap": {
+      "put": {
+        "tags": ["Dispensers"],
+        "description": "Close dispenser tap when complete serving beer. Requires dispenser id.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "dispenser_id": {
+                    "type": "string",
+                    "description": "Insert and existing dispenser id.",
+                    "example": "af74632d-56d9-4b99-b73f-38c30c8b45df"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dispenser tap closed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Service Id",
+                      "format": "uuid"
+                    },
+                    "dispenser_id": {
+                      "type": "string",
+                      "description": "dispenser id",
+                      "format": "uuid"
+                    },
+                    "start_time": {
+                      "type": "string",
+                      "description": "Time register when tap was opened",
+                      "example": "2023-07-29T00:06:31.339Z"
+                    },
+                    "end_time": {
+                      "type": "string",
+                      "description": "Time register when tap was opened",
+                      "example": "2023-07-29T00:06:31.339Z"
+                    },
+                    "beer_served": {
+                      "type": "number",
+                      "description": "Beer served calculated",
+                      "example": "2.5"
+                    },
+                    "amount_charged": {
+                      "type": "number",
+                      "description": "Amount charged calculated",
+                      "example": "3.5"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": "Tap already closed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reset-revenue": {
+      "put": {
+        "tags": ["Dispensers"],
+        "description": "Update Dispenser information: name, flow rate, and/or beverage price. Requires authentication and Dispenser ID as query",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Revenues reseted successfully",
+            "content": {
+              "properties": {
+                "example": "Revenues reseted successfully"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services": {
+      "get": {
+        "tags": ["Services"],
+        "description": "List all services carried out for each dispenser. Requires admin authentication and dispenser id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "dispenser_id",
+            "required": "true",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Dispenser ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dispenser tap closed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Service Id",
+                        "format": "uuid"
+                      },
+                      "dispenser_id": {
+                        "type": "string",
+                        "description": "dispenser id",
+                        "format": "uuid"
+                      },
+                      "start_time": {
+                        "type": "string",
+                        "description": "Time register when tap was opened",
+                        "example": "2023-07-29T00:06:31.339Z"
+                      },
+                      "end_time": {
+                        "type": "string",
+                        "description": "Time register when tap was opened",
+                        "example": "2023-07-29T00:06:31.339Z"
+                      },
+                      "beer_served": {
+                        "type": "number",
+                        "description": "Beer served calculated",
+                        "example": "2.5"
+                      },
+                      "amount_charged": {
+                        "type": "number",
+                        "description": "Amount charged calculated",
+                        "example": "3.5"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dispensers-service": {
+      "delete": {
+        "tags": ["Services"],
+        "description": "Delete all services related to a single dispenser. Requires authentication and dispenser id!",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "dispenser_id",
+            "required": "true",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Dispenser ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registers delete successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": "Registers delete successfully"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/single-service/:{service_id}": {
+      "delete": {
+        "tags": ["Services"],
+        "description": "Delete a single service related to a single dispenser. Requires authentication, service id, and dispenser id!",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "service_id",
+            "in": "path",
+            "required": true,
+            "description": "Service ID.",
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "dispenser_id",
+            "required": "true",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Dispenser ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Register delete successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": "Register delete successfully"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/report": {
+      "get": {
+        "tags": ["Report"],
+        "description": "Generate a csv report to analyse all data from the dispensers. Requires admin authentication.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example":"Report generated successfully!"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RequestCreateAdmin": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Admin name",
+            "example": "Elvis"
+          },
+          "email": {
+            "type": "string",
+            "description": "Admin email",
+            "example": "elvis@elvis.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Admin password",
+            "example": "elvis1234"
+          }
+        }
+      },
+      "ResponseCreateAdmin": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Admin name",
+            "example": "Elvis"
+          },
+          "email": {
+            "type": "string",
+            "description": "Admin email",
+            "example": "elvis@elvis.com"
+          },
+          "id": {
+            "type": "string",
+            "description": "Admin Id",
+            "format": "uuid"
+          }
+        }
+      },
+      "RequestLoginAdmin": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Admin email",
+            "example": "elvis@elvis.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Admin password",
+            "example": "elvis1234"
+          }
+        }
+      },
+      "ResponseLoginAdmin": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Admin name",
+            "example": "Elvis"
+          },
+          "email": {
+            "type": "string",
+            "description": "Admin email",
+            "example": "elvis@elvis.com"
+          },
+          "id": {
+            "type": "string",
+            "description": "Admin Id",
+            "format": "uuid"
+          }
+        }
+      },
+      "ResponseAdmin": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Admin name",
+            "example": "Elvis"
+          },
+          "email": {
+            "type": "string",
+            "description": "Admin email",
+            "example": "elvis@elvis.com"
+          },
+          "id": {
+            "type": "string",
+            "description": "Admin Id",
+            "format": "uuid"
+          }
+        }
+      },
+      "ResponseDispenser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Dispenser Id",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "dispenser name",
+            "example": "Dispenser Test"
+          },
+          "flow_rate": {
+            "type": "number",
+            "description": "Tap flow rate",
+            "example": "0.08"
+          },
+          "beverage_price": {
+            "type": "string",
+            "description": "Dispenser beverage price",
+            "example": "3.8"
+          },
+          "status": {
+            "type": "boolean",
+            "description": "Indication of tap Position. False indicates closed",
+            "example": "false"
+          },
+          "total_amount": {
+            "type": "number",
+            "description": "Total revenue in current dispenser",
+            "example": "25.4"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "description": "JWT Authentication",
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

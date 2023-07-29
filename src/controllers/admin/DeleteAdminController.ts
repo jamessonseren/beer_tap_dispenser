@@ -9,7 +9,7 @@ class DeleteAdminController{
 
         const admin = await deleteAdmin.execute(admin_id)
 
-        return res.json(admin)
+        return res.json({message:`${admin.name} deleted successfully`})
     }
 }
 

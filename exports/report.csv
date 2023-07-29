@@ -1,5 +1,4 @@
 "dispenser_id","dispenser_name","revenue","revenue_avg_analysis","time_running_in_minutes","operations"
-"fec5754e-ead7-4b39-a88a-e99ada335305","dispenser 1","8.15","below_average","0.54",11
-"90c8cb03-f180-49ff-ae6b-295f505b4c16","dispenser 3","10.39","above_average","1.49",13
-"d44786bc-9d8a-42f1-a407-01c0b602c10e","dispenser 2","7.56","below_average","1.03",18
-"18d96f20-77f9-487a-8059-9d1f13fe4c09","dispenser 4","9.01","above_average","0.69",12
+"af74632d-56d9-4b99-b73f-38c30c8b45df","Dispenser 1","2.13","above_average","0.17",2
+"9e5ca640-0354-4520-813c-aa050c57a7b3","Dispenser 2","1.52","below_average","5.36",3
+"13bb727e-26a8-4be4-ae92-9e70b898928c","Dispenser 3","1.62","below_average","0.13",2

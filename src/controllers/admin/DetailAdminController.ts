@@ -6,6 +6,7 @@ class DetailAdminController{
 
         const admin_id = req.admin_id
         
+        
         const detailAdmin = new DetailAdminService()
         
         const admin = await detailAdmin.execute(admin_id)

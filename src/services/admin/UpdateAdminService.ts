@@ -4,6 +4,7 @@ interface AdminRequest{
     admin_id: string
     name: string
     email: string
+    
 }
 class UpdateAdminService{
     async execute( {admin_id, name, email }: AdminRequest ){
@@ -18,6 +19,11 @@ class UpdateAdminService{
             data:{
                 name,
                 email
+            },
+            select:{
+                id: true,
+                name: true,
+                email: true
             }
         })
     }
