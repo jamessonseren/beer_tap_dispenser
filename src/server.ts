@@ -10,7 +10,7 @@ import { router } from './routes'
 
 const app = express()
 
-const port = 3333
+
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -31,4 +31,4 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) =>{
     })
 })
 
-app.listen(port, () => console.log(`Server running on PORT ${port}`))
+app.listen(process.env.PORT, () => console.log(`Server running`))
