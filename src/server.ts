@@ -10,6 +10,8 @@ import { router } from './routes'
 
 const app = express()
 
+const port = 3333
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json())
@@ -29,4 +31,4 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) =>{
     })
 })
 
-app.listen(3333, () => console.log("Server running http://localhost:3333"))
+app.listen(port, () => console.log(`Server running on PORT ${port}`))

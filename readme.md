@@ -6,12 +6,14 @@
 - <a href="#technologies">Technologies</a>
 - <a href="#howtorun">How to run</a>
 - <a href="#tests">Tests</a>
+- <a href="#extra">Extras</a>
+- <a href="#nextsteps">Next Steps</a>
 
 ## Description
 
 This project was developed by Jamesson Seren Software Engineer.
 
-## Project Functionalities
+## Functionalities
 
 ### Admin
 
@@ -74,13 +76,15 @@ The report will display the following:
 7. express
 8. swagger
 
-## How to run the project
+## How to run
 
 ```bash
 $ npm run dev
+```
 
 or
 
+```bash
 $ yarn dev
 ```
 
@@ -91,3 +95,17 @@ This project was tested and documented with Swagger.io
 To test run to the path <strong>/api-docs</strong>
 
 for exemple: http://localhost:3333/api-docs
+
+## Extras
+
+This project requires two environment variables:
+
+1. DATABASE_URL
+2. JWT_SECRET
+
+Make sure to insert them before running the project.
+
+## Next Steps
+
+- [] Dashboard for analysing the report
+- [] New report for the dispensers
